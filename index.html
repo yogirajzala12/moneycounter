@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rupee Counter</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f4;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Holds the photo and the counter together */
+    .wrapper {
+      position: relative;
+      width: 450px;
+      height: 450px;
+      max-width: 90vw;
+      max-height: 90vw;
+    }
+
+    .photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 3px solid #333;
+      box-sizing: border-box;
+      display: block;
+    }
+
+    /* Counter sits on top of the photo */
+    .box {
+      position: absolute;
+      top: 20px;                  /* distance from top of photo */
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      white-space: nowrap;
+      border: 3px solid #333;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.85); /* slightly see-through */
+      font-size: 32px;
+      font-weight: bold;
+      color: #1a7f37;
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <img src="Photo.jpeg" alt="My photo" class="photo" />
+    <div class="box" id="counter">₹0.00</div>
+  </div>
+
+  <script>
+    const DAILY_TARGET_USD = 1400;            // dollars per day
+    const USD_TO_INR = 96.5;                  // exchange rate, update when it changes
+    const DAILY_TARGET = DAILY_TARGET_USD * USD_TO_INR; // ₹1,35,100 per day
+    const SECONDS_PER_DAY = 24 * 60 * 60;     // 86,400
+    const PER_SECOND = DAILY_TARGET / SECONDS_PER_DAY;  // about ₹1.56 per second
+
+    const counter = document.getElementById("counter");
+    const start = Date.now();
+
+    function update() {
+      const elapsedSeconds = Math.floor((Date.now() - start) / 1000);
+      const amount = Math.min(elapsedSeconds * PER_SECOND, DAILY_TARGET);
+      counter.textContent = amount.toLocaleString("en-IN", {
+        style: "currency",
+        currency: "INR"
+      });
+    }
+
+    update();
+    setInterval(update, 1000);
+  </script>
+</body>
+</html>
